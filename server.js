@@ -27,7 +27,7 @@ const http = require("http");
 const server = http.createServer();
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: "https://viecipe.vercel.app/",
     methods: ["GET", "POST"],
     allowedHeaders: ["Authorization"],
     credentials: true,
@@ -35,12 +35,12 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("a user connected");
+  // console.log("a user connected");
 
   // Example: Joining a room based on user ID
   socket.on("joinRoom", (userId) => {
     socket.join(userId); // Join room identified by userId
-    console.log(`User ${userId} joined the room`);
+    // console.log(`User ${userId} joined the room`);
   });
 
   // Example: Handling private messages
