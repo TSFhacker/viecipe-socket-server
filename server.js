@@ -27,7 +27,7 @@ const http = require("http");
 const server = http.createServer();
 const io = new Server(server, {
   cors: {
-    origin: "https://viecipe.vercel.app",
+    origin: ["http://localhost:3000", "http://localhost:3001"],
     methods: ["GET", "POST"],
     allowedHeaders: ["Authorization"],
     credentials: true,
@@ -55,12 +55,21 @@ io.on("connection", (socket) => {
         status: "unread",
       });
 
-      console.log("Message stored in MongoDB:", result.insertedId);
+      // console.log("Message stored in MongoDB:", result.insertedId);
 
       // Emit message to a specific room (user)
-      console.log(input, senderId, recipientId);
-      io.to(recipientId).emit("privateMessage", input);
-      io.emit("message", input);
+      io.to(recipientId).emit("privateMessage", {
+        input: input,
+        recipientId: recipientId,
+        senderId: senderId,
+        timestamp: new Date(),
+      });
+      io.to(senderId).emit("message", {
+        input: input,
+        recipientId: recipientId,
+        senderId: senderId,
+        timestamp: new Date(),
+      });
     } catch (error) {
       console.error("Error storing message in MongoDB:", error);
     }
@@ -71,7 +80,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8001;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
