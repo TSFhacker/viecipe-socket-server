@@ -25,7 +25,14 @@ const { Server } = require("socket.io");
 const http = require("http");
 
 const server = http.createServer();
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "https://viecipe.vercel.app",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Authorization"],
+    credentials: true,
+  },
+});
 
 io.on("connection", (socket) => {
   console.log("a user connected");
